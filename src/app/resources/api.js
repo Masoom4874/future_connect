@@ -1,3 +1,5 @@
+const domain = "http://13.60.46.80:3001";
+
 // Hello;
 const endpoints = {
   login: "/login/",
@@ -7,7 +9,7 @@ const endpoints = {
 };
 
 function getURLbyEndPoint(endpoint) {
-  return "/api/auth" + endpoints[endpoint];
+  return domain + "/api/auth" + endpoints[endpoint];
 }
 
 export { endpoints, getURLbyEndPoint };

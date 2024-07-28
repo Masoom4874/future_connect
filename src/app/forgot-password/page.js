@@ -259,6 +259,7 @@ export default function Home() {
                     }}
                   />
                 </Box>
+                {error && <Typography color="error">{error}</Typography>}
 
                 <Button
                   variant="contained"
@@ -297,6 +298,8 @@ export default function Home() {
                     }}
                   />
                 </Box>
+                {error && <Typography color="error">{error}</Typography>}
+
                 <Button
                   variant="contained"
                   color="primary"
