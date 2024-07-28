@@ -118,7 +118,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "100%",
         backgroundColor: "#122743",
         color: "#fff",
         display: "flex",
@@ -132,7 +132,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <IconButton onClick={toggleSidebar} sx={{ color: "#fff" }}>
           {!collapsed ? (
             <svg
-              width="233"
+              width="auto"
               height="55"
               viewBox="0 0 233 55"
               fill="none"
