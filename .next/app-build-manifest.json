@@ -25,7 +25,7 @@
       "static/chunks/738-5784420ca39cd608.js",
       "static/chunks/507-b5de8481a3f17db9.js",
       "static/chunks/847-ff0d5f2ebd0e1ca0.js",
-      "static/chunks/app/forgot-password/page-264806570e3f4c71.js"
+      "static/chunks/app/forgot-password/page-5de0c5f67b29d40f.js"
     ],
     "/page": [
       "static/chunks/webpack-f1532aa9b8bd9efd.js",
@@ -37,7 +37,7 @@
       "static/chunks/738-5784420ca39cd608.js",
       "static/chunks/507-b5de8481a3f17db9.js",
       "static/chunks/847-ff0d5f2ebd0e1ca0.js",
-      "static/chunks/app/page-2eefc4cf7cd14855.js"
+      "static/chunks/app/page-6d80b433a31cb958.js"
     ],
     "/sign-up/page": [
       "static/chunks/webpack-f1532aa9b8bd9efd.js",
@@ -49,7 +49,7 @@
       "static/chunks/738-5784420ca39cd608.js",
       "static/chunks/507-b5de8481a3f17db9.js",
       "static/chunks/847-ff0d5f2ebd0e1ca0.js",
-      "static/chunks/app/sign-up/page-321bf219eeb66dc2.js"
+      "static/chunks/app/sign-up/page-852c1782fb346637.js"
     ],
     "/dashboard/page": [
       "static/chunks/webpack-f1532aa9b8bd9efd.js",
