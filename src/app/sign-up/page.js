@@ -1,7 +1,67 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Box, Grid, TextField, Button, Typography } from "@mui/material";
 import styles from "../page.module.css";
+import axios from "axios";
+import { getURLbyEndPoint } from "../resources/api";
 
 export default function Home() {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      if (!name) {
+        alert("Please provide name");
+        return;
+      }
+      if (!email) {
+        alert("Please provide email");
+        return;
+      }
+      if (!password) {
+        alert("Please provide password");
+        return;
+      }
+
+      const response = await axios.post(
+        getURLbyEndPoint("signup"),
+        {
+          name,
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Signup successful", response.data);
+      alert("Registered Successfully!!!");
+      router.push("/");
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message || "Signup failed");
+      } else if (err.request) {
+        setError("No response from server. Please try again.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Box
       className={styles.container}
@@ -35,6 +95,7 @@ export default function Home() {
           </svg>
         </Grid>
         <Grid item style={{ width: "25%", height: "auto" }}>
+          <Box></Box>
           <Box
             className={styles.form}
             sx={{
@@ -115,6 +176,8 @@ export default function Home() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                name="name"
+                onChange={(e) => setName(e.target.value)}
                 InputProps={{ sx: { color: "#fff" } }}
                 style={{
                   backgroundColor: "rgba(90, 113, 145, 0.35)",
@@ -131,6 +194,8 @@ export default function Home() {
                 fullWidth
                 margin="normal"
                 InputProps={{ sx: { color: "#fff" } }}
+                name="email"
+                onChange={(e) => setEmail(e.target.value)}
                 style={{
                   backgroundColor: "rgba(90, 113, 145, 0.35)",
                   borderRadius: "5px",
@@ -145,6 +210,8 @@ export default function Home() {
                 variant="outlined"
                 fullWidth
                 margin="normal"
+                name="password"
+                onChange={(e) => setPassword(e.target.value)}
                 InputProps={{ sx: { color: "#fff" } }}
                 style={{
                   backgroundColor: "rgba(90, 113, 145, 0.35)",
@@ -152,10 +219,13 @@ export default function Home() {
                 }}
               />
             </Box>
+            {error && <Typography color="error">{error}</Typography>}
 
             <Button
               variant="contained"
               color="primary"
+              onClick={handleSignUp}
+              disabled={loading}
               sx={{
                 marginTop: 2,
                 backgroundImage:
@@ -166,7 +236,7 @@ export default function Home() {
               }}
               fullWidth
             >
-              SIGNUP
+              {loading ? "Loading..." : "SIGNUP"}
             </Button>
           </Box>
         </Grid>

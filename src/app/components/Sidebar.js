@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -26,11 +26,95 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   const router = useRouter();
+  const [activePage, setActivePage] = useState("");
+
+  useEffect(() => {
+    setActivePage(window.location.pathname);
+  }, []);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
   };
 
+  const navigate = (path) => {
+    router.push(path);
+    setActivePage(path); // Set the active page
+  };
+
+  const menuItems = [
+    {
+      title: "Dashboard",
+      icon: <DashboardIcon sx={{ color: "#fff" }} />,
+      route: "/dashboard",
+    },
+    {
+      title: "Tenants",
+      icon: <ApartmentIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/tenants",
+    },
+    {
+      title: "Fleets",
+      icon: <DirectionsCarIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/fleets",
+    },
+    {
+      title: "Routers",
+      icon: <RouterIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/routers",
+    },
+    {
+      title: "Firewall Templates",
+      icon: <PolicyIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/firewall-templates",
+    },
+    {
+      title: "Hotspot Users",
+      icon: <PeopleIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/hotspot-users",
+    },
+    {
+      title: "Audit Trail",
+      icon: <ReceiptIcon sx={{ color: "#fff" }} />,
+      route: "/audit-trail",
+    },
+    {
+      title: "Billing",
+      icon: <ReceiptIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/billing",
+    },
+    {
+      title: "Admins",
+      icon: <AdminPanelSettingsIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/admins",
+    },
+    {
+      title: "Create",
+      icon: <AddIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/create",
+      style: {
+        textAlign: "start",
+        width: collapsed ? "100%" : "90%",
+        backgroundColor: "#304B61",
+        borderRadius: "10px",
+        "&:hover": {
+          backgroundColor: "#3576A1",
+        },
+      },
+    },
+  ];
+
+  const accountItems = [
+    {
+      title: "Account",
+      icon: <AccountCircleIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/account",
+    },
+    {
+      title: "Log Out",
+      icon: <ExitToAppIcon sx={{ fontSize: "30px", color: "#fff" }} />,
+      route: "/",
+    },
+  ];
   return (
     <Box
       sx={{
@@ -127,99 +211,49 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           )}
         </IconButton>
         <List>
-          <ListItem button onClick={() => router.push("/dashboard")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <DashboardIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Dashboard" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/tenants")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <ApartmentIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Tenants" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/fleets")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <DirectionsCarIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Fleets" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/routers")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <RouterIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Routers" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/firewall-templates")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <PolicyIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Firewall Templates" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/hotspot-users")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <PeopleIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Hotspot Users" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/audit-trail")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <ReceiptIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Audit Trail" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/billing")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <ReceiptIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Billing" />}
-          </ListItem>
-          <ListItem button onClick={() => router.push("/admins")}>
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <AdminPanelSettingsIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && <ListItemText primary="Admins" />}
-          </ListItem>
-
-          <ListItem
-            button
-            onClick={() => router.push("/create")}
-            sx={{
-              marginLeft: "10px",
-              textAlign: "start",
-              width: collapsed ? "100%" : "90%",
-              backgroundColor: "#304B61",
-              borderRadius: "10px",
-              "&:hover": {
-                backgroundColor: "#3576A1",
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <AddIcon sx={{ fontSize: "30px" }} />
-            </ListItemIcon>
-            {!collapsed && (
-              <Box sx={{ width: "90%" }}>
-                <ListItemText primary="Create" />
-              </Box>
-            )}
-          </ListItem>
+          {menuItems.map((item, index) => (
+            <ListItem
+              key={index}
+              button
+              onClick={() => router.push(item.route)}
+              sx={{
+                backgroundColor:
+                  activePage === item.route ? "#4984B5" : "inherit",
+                "&:hover": {
+                  backgroundColor: "#4984B5",
+                },
+                ...item.style,
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              {!collapsed && <ListItemText primary={item.title} />}
+            </ListItem>
+          ))}
         </List>
       </Box>
       <Box sx={{ width: "100%" }}>
-        <ListItem button onClick={() => router.push("/account")}>
-          <ListItemIcon sx={{ color: "#fff" }}>
-            <AccountCircleIcon sx={{ fontSize: "30px" }} />
-          </ListItemIcon>
-          {!collapsed && <ListItemText primary="Account" />}
-        </ListItem>
-        <ListItem button onClick={() => router.push("/logout")}>
-          <ListItemIcon sx={{ color: "#fff" }}>
-            <ExitToAppIcon sx={{ fontSize: "30px" }} />
-          </ListItemIcon>
-          {!collapsed && <ListItemText primary="Log Out" />}
-        </ListItem>
+        {accountItems.map((item, index) => (
+          <ListItem
+            key={index}
+            button
+            onClick={() => {
+              if (item.title === "Log Out") {
+                sessionStorage.clear(); // Clear all session storage
+              }
+              router.push(item.route); // Navigate to the specified route
+            }}
+            sx={{
+              backgroundColor:
+                activePage === item.route ? "#4984B5" : "inherit",
+              "&:hover": {
+                backgroundColor: "#4984B5",
+              },
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            {!collapsed && <ListItemText primary={item.title} />}
+          </ListItem>
+        ))}
       </Box>
     </Box>
   );

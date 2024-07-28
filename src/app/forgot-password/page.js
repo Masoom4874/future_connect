@@ -1,7 +1,105 @@
+"use client";
+import react, { useState } from "react";
+
 import { Box, Grid, TextField, Button, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
+import axios from "axios";
+import { getURLbyEndPoint } from "../resources/api";
 
 export default function Home() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [sentOtp, setSentOtp] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSendOTP = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      if (!email) {
+        alert("Please provide email");
+        return;
+      }
+      const response = await axios.post(
+        getURLbyEndPoint("forgetPassword"),
+        {
+          email,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("OTP sent successful", response.data);
+      alert("OTP sent Successfully!!!");
+      setSentOtp(true);
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message || "Forget Password failed");
+      } else if (err.request) {
+        setError("No response from server. Please try again.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      if (!email) {
+        alert("Please provide email");
+        return;
+      }
+      if (!otp) {
+        alert("Please provide otp");
+        return;
+      }
+      if (!password) {
+        alert("Please provide password");
+        return;
+      }
+      const response = await axios.post(
+        getURLbyEndPoint("changePassword"),
+        {
+          email,
+          otp,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Password changes successful", response.data);
+      alert("Password change Successfully!!!");
+      setSentOtp(true);
+      router.push("/");
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message || "Passward change failed");
+      } else if (err.request) {
+        setError("No response from server. Please try again.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Box
       className={styles.container}
@@ -107,37 +205,117 @@ export default function Home() {
               />
             </svg>
 
-            <Box sx={{ marginBottom: 2 }} textAlign="start">
-              <Typography variant="h6" sx={{ color: "#bbb" }}>
-                Email
-              </Typography>
-              <TextField
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                InputProps={{ sx: { color: "#fff" } }}
-                style={{
-                  backgroundColor: "rgba(90, 113, 145, 0.35)",
-                  borderRadius: "5px",
-                }}
-              />
-            </Box>
+            {sentOtp ? (
+              <>
+                <Box sx={{ marginBottom: 2 }} textAlign="start">
+                  <Typography variant="h6" sx={{ color: "#bbb" }}>
+                    Email
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    name="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    InputProps={{ sx: { color: "#fff" } }}
+                    style={{
+                      backgroundColor: "rgba(90, 113, 145, 0.35)",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Box>
 
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                marginTop: 2,
-                backgroundImage:
-                  "linear-gradient(to right, rgba(90, 147, 193, 0.64), rgba(35, 93, 140, 0.64))",
-                color: "#fff",
-                fontSize: "large",
-                fontWeight: "normal",
-              }}
-              fullWidth
-            >
-              RESET
-            </Button>
+                <Box sx={{ marginBottom: 2 }} textAlign="start">
+                  <Typography variant="h6" sx={{ color: "#bbb" }}>
+                    OTP
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    name="otp"
+                    onChange={(e) => setOtp(e.target.value)}
+                    InputProps={{ sx: { color: "#fff" } }}
+                    style={{
+                      backgroundColor: "rgba(90, 113, 145, 0.35)",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Box>
+                <Box sx={{ marginBottom: 2 }} textAlign="start">
+                  <Typography variant="h6" sx={{ color: "#bbb" }}>
+                    Password
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    name="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{ sx: { color: "#fff" } }}
+                    style={{
+                      backgroundColor: "rgba(90, 113, 145, 0.35)",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Box>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleChangePassword}
+                  disabled={loading}
+                  sx={{
+                    marginTop: 2,
+                    backgroundImage:
+                      "linear-gradient(to right, rgba(90, 147, 193, 0.64), rgba(35, 93, 140, 0.64))",
+                    color: "#fff",
+                    fontSize: "large",
+                    fontWeight: "normal",
+                  }}
+                  fullWidth
+                >
+                  {loading ? "Loading..." : "SET PASSWORD"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Box sx={{ marginBottom: 2 }} textAlign="start">
+                  <Typography variant="h6" sx={{ color: "#bbb" }}>
+                    Email
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    name="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    InputProps={{ sx: { color: "#fff" } }}
+                    style={{
+                      backgroundColor: "rgba(90, 113, 145, 0.35)",
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Box>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSendOTP}
+                  disabled={loading}
+                  sx={{
+                    marginTop: 2,
+                    backgroundImage:
+                      "linear-gradient(to right, rgba(90, 147, 193, 0.64), rgba(35, 93, 140, 0.64))",
+                    color: "#fff",
+                    fontSize: "large",
+                    fontWeight: "normal",
+                  }}
+                  fullWidth
+                >
+                  {loading ? "Loading..." : "RESET"}
+                </Button>
+              </>
+            )}
           </Box>
         </Grid>
         <Grid item>
